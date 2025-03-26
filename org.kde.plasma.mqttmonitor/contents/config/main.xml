@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name=""/>
+    
+    <group name="General">
+        <entry name="serverAddress" type="String">
+            <default>localhost</default>
+        </entry>
+        <entry name="serverPort" type="Int">
+            <default>1883</default>
+        </entry>
+        <entry name="username" type="String">
+            <default></default>
+        </entry>
+        <entry name="password" type="String">
+            <default></default>
+        </entry>
+        <entry name="autoConnect" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="topics" type="String">
+            <default>home/sensors/#</default>
+        </entry>
+        <entry name="conditions" type="String">
+            <default>home/sensors/temperature|integer|>30|Temperature is too high!
+home/sensors/door|string|open|Door has been opened!</default>
+        </entry>
+    </group>
+</kcfg>
