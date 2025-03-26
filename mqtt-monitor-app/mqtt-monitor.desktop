@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=MQTT Monitor
+Comment=Monitor MQTT topics and receive notifications
+Exec=mqtt-monitor
+Icon=mqtt-monitor
+Terminal=false
+Categories=Network;Qt;
+Keywords=MQTT;Monitor;
