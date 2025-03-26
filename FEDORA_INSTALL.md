@@ -4,13 +4,15 @@ This guide provides detailed instructions for installing and testing the MQTT Mo
 
 ## Installation
 
+> **Note:** This plasmoid supports both Plasma 5 and Plasma 6. For Plasma 6, it uses the new metadata.json format, while for Plasma 5 it uses the traditional metadata.desktop format.
+
 ### 1. Install Dependencies
 
 First, install all the required dependencies:
 
 ```bash
 # Install development tools
-sudo dnf install cmake gcc-c++ kf5-extra-cmake-modules
+sudo dnf install cmake gcc-c++ extra-cmake-modules
 
 # Install KDE development packages
 sudo dnf install kf5-plasma-devel kf5-knotifications-devel

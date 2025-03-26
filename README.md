@@ -12,9 +12,11 @@ A KDE Plasma widget that allows you to connect to an MQTT server, subscribe to t
 
 ## Requirements
 
-- KDE Plasma 5.15 or newer
+- KDE Plasma 5.15 or newer (Plasma 6.x fully supported)
 - Qt 6.2 or newer
 - Qt MQTT module
+
+> **Note:** This plasmoid supports both Plasma 5 and Plasma 6. For Plasma 6, it uses the new metadata.json format, while for Plasma 5 it uses the traditional metadata.desktop format.
 
 ## Installation
 

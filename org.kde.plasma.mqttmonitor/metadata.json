@@ -1,0 +1,28 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "developer@kde.org",
+                "Name": "KDE Developer"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Monitor MQTT topics and receive notifications",
+        "EnabledByDefault": true,
+        "FormFactors": [
+            "desktop",
+            "tablet",
+            "handset"
+        ],
+        "Icon": "network-connect",
+        "Id": "org.kde.plasma.mqttmonitor",
+        "License": "GPL-2.0+",
+        "Name": "MQTT Monitor",
+        "Version": "1.0",
+        "Website": "https://kde.org/"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-MainScript": "ui/main.qml",
+    "X-Plasma-StandAloneApp": true
+}

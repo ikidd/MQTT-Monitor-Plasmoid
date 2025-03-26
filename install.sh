@@ -22,6 +22,19 @@ if [ ! -d "org.kde.plasma.mqttmonitor" ]; then
     exit 1
 fi
 
+# Check if metadata.json exists (for Plasma 6) or metadata.desktop (for Plasma 5)
+if [ -f "org.kde.plasma.mqttmonitor/metadata.json" ]; then
+    echo "Found metadata.json - using Plasma 6 format"
+    PLASMA_VERSION=6
+elif [ -f "org.kde.plasma.mqttmonitor/metadata.desktop" ]; then
+    echo "Found metadata.desktop - using Plasma 5 format"
+    PLASMA_VERSION=5
+else
+    echo "Error: Neither metadata.json nor metadata.desktop found."
+    echo "Please make sure the plasmoid files are properly structured."
+    exit 1
+fi
+
 # Check for Qt MQTT module
 echo "Checking for Qt MQTT module..."
 if ! qmlscene -I /usr/lib/qt/qml -e "import QtMqtt 6.2; console.log('Qt MQTT module found')" &> /dev/null; then
