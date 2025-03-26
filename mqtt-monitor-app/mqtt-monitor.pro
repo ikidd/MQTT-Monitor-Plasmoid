@@ -19,16 +19,15 @@ QML_DESIGNER_IMPORT_PATH =
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
+else: unix:!android: target.path = /usr/bin
 !isEmpty(target.path): INSTALLS += target
+
+# Set application name
+TARGET = mqtt-monitor
 
 # Desktop file for Linux
 unix:!android {
     desktop.files = mqtt-monitor.desktop
     desktop.path = /usr/share/applications/
     INSTALLS += desktop
-    
-    icon.files = mqtt-monitor.png
-    icon.path = /usr/share/icons/hicolor/128x128/apps/
-    INSTALLS += icon
 }

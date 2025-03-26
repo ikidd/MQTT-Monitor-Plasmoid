@@ -2,7 +2,21 @@
 
 # MQTT Monitor Desktop App installer script
 
-echo "Installing MQTT Monitor Desktop Application..."
+# Check if the application is already installed
+check_existing_installation() {
+    if [ -f "/usr/bin/mqtt-monitor" ]; then
+        echo "MQTT Monitor is already installed on this system."
+        read -p "Do you want to update the existing installation? (y/n) " -n 1 -r
+        echo ""
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo "Installation cancelled."
+            exit 0
+        fi
+        echo "Proceeding with update..."
+    else
+        echo "Installing MQTT Monitor Desktop Application..."
+    fi
+}
 
 # Function to detect the Linux distribution
 detect_distro() {
@@ -91,6 +105,9 @@ check_qt_mqtt() {
         echo "Qt MQTT module already installed."
     fi
 }
+
+# Check if the application is already installed
+check_existing_installation
 
 # Detect distribution and install dependencies if needed
 DISTRO=$(detect_distro)
