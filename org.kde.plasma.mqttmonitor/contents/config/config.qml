@@ -1,4 +1,4 @@
-checkimport QtQuick 6.2
+import QtQuick 6.2
 import org.kde.plasma.configuration 6.0
 
 ConfigModel {
