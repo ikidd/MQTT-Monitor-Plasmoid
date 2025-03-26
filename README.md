@@ -13,7 +13,7 @@ A KDE Plasma widget that allows you to connect to an MQTT server, subscribe to t
 ## Requirements
 
 - KDE Plasma 5.15 or newer
-- Qt 5.15 or newer
+- Qt 6.2 or newer
 - Qt MQTT module
 
 ## Installation
@@ -24,25 +24,25 @@ First, make sure you have the required dependencies:
 
 ```bash
 # For Debian/Ubuntu
-sudo apt install cmake extra-cmake-modules plasma-framework-dev qtbase5-dev qtdeclarative5-dev libkf5notifications-dev qtmqtt5-dev
+sudo apt install cmake extra-cmake-modules plasma-framework-dev qt6-base-dev qt6-declarative-dev libkf5notifications-dev qt6-mqtt-dev
 
 # For Fedora
-sudo dnf install cmake extra-cmake-modules kf5-plasma-devel qt5-qtbase-devel qt5-qtdeclarative-devel kf5-knotifications-devel qt5-qtmqtt-devel
+sudo dnf install cmake gcc-c++ kf5-extra-cmake-modules kf5-plasma-devel qt6-qtbase-devel qt6-qtdeclarative-devel kf5-knotifications-devel qt6-qtmqtt-devel
 
 # For Arch Linux
-sudo pacman -S cmake extra-cmake-modules plasma-framework qt5-base qt5-declarative knotifications qt5-mqtt
+sudo pacman -S cmake extra-cmake-modules plasma-framework qt6-base qt6-declarative knotifications qt6-mqtt
 ```
 
 ### Install the Plasmoid
 
-Method 1: Using plasmapkg2 (recommended)
+Method 1: Using plasmapkg (recommended)
 
 ```bash
 # Navigate to the directory containing the plasmoid
 cd /path/to/MQTT\ Plasmoid/
 
-# Install the plasmoid
-plasmapkg2 -i org.kde.plasma.mqttmonitor
+# Install the plasmoid (use plasmapkg6 for Qt6 systems, plasmapkg2 for older systems)
+plasmapkg6 -i org.kde.plasma.mqttmonitor || plasmapkg2 -i org.kde.plasma.mqttmonitor
 ```
 
 Method 2: Manual installation
@@ -56,7 +56,8 @@ cp -r org.kde.plasma.mqttmonitor ~/.local/share/plasma/plasmoids/
 After installation, you may need to restart Plasma:
 
 ```bash
-kquitapp5 plasmashell && kstart5 plasmashell
+kquitapp6 plasmashell || kquitapp5 plasmashell
+kstart6 plasmashell || kstart5 plasmashell
 ```
 
 ## Usage

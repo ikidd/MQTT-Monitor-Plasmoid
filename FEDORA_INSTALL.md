@@ -10,16 +10,16 @@ First, install all the required dependencies:
 
 ```bash
 # Install development tools
-sudo dnf install cmake gcc-c++ extra-cmake-modules
+sudo dnf install cmake gcc-c++ kf5-extra-cmake-modules
 
 # Install KDE development packages
 sudo dnf install kf5-plasma-devel kf5-knotifications-devel
 
 # Install Qt dependencies
-sudo dnf install qt5-qtbase-devel qt5-qtdeclarative-devel
+sudo dnf install qt6-qtbase-devel qt6-qtdeclarative-devel
 
 # Install MQTT dependencies
-sudo dnf install qt5-qtmqtt-devel
+sudo dnf install qt6-qtmqtt-devel
 
 # Install Mosquitto for testing (optional)
 sudo dnf install mosquitto mosquitto-clients
@@ -37,11 +37,11 @@ chmod +x install.sh
 ./install.sh
 ```
 
-#### Method 2: Manual installation using plasmapkg2
+#### Method 2: Manual installation using plasmapkg
 
 ```bash
-# Install the plasmoid
-plasmapkg2 -i org.kde.plasma.mqttmonitor
+# Install the plasmoid (use plasmapkg6 for Qt6 systems, plasmapkg2 for older systems)
+plasmapkg6 -i org.kde.plasma.mqttmonitor || plasmapkg2 -i org.kde.plasma.mqttmonitor
 ```
 
 #### Method 3: Manual installation by copying files
@@ -59,7 +59,8 @@ cp -r org.kde.plasma.mqttmonitor/* ~/.local/share/plasma/plasmoids/org.kde.plasm
 After installation, restart the Plasma shell to ensure the widget is properly loaded:
 
 ```bash
-kquitapp5 plasmashell && kstart5 plasmashell
+kquitapp6 plasmashell || kquitapp5 plasmashell
+kstart6 plasmashell || kstart5 plasmashell
 ```
 
 ## Setting Up MQTT Broker for Testing
@@ -148,7 +149,7 @@ mosquitto_pub -h localhost -t "test/door" -m "open"
    
    If you get errors about missing Qt MQTT module:
    ```bash
-   sudo dnf install qt5-qtmqtt qt5-qtmqtt-devel
+   sudo dnf install qt6-qtmqtt qt6-qtmqtt-devel
    ```
 
 2. **SELinux Blocking Connections**
@@ -178,7 +179,8 @@ mosquitto_pub -h localhost -t "test/door" -m "open"
    Clear the KDE cache:
    ```bash
    rm -rf ~/.cache/plasma*
-   kquitapp5 plasmashell && kstart5 plasmashell
+   kquitapp6 plasmashell || kquitapp5 plasmashell
+   kstart6 plasmashell || kstart5 plasmashell
    ```
 
 ## Uninstalling
@@ -186,7 +188,7 @@ mosquitto_pub -h localhost -t "test/door" -m "open"
 If you need to remove the plasmoid:
 
 ```bash
-plasmapkg2 -r org.kde.plasma.mqttmonitor
+plasmapkg6 -r org.kde.plasma.mqttmonitor || plasmapkg2 -r org.kde.plasma.mqttmonitor
 ```
 
 ## Additional Resources
