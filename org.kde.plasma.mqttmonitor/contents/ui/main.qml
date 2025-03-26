@@ -1,9 +1,9 @@
 import QtQuick 6.2
 import QtQuick.Layouts 6.2
 import QtQuick.Controls 6.2
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 3.0 as PlasmaComponents
+import org.kde.plasma.plasmoid 6.0
+import org.kde.plasma.core 6.0 as PlasmaCore
+import org.kde.plasma.components 6.0 as PlasmaComponents
 import org.kde.notification 1.0
 import QtMqtt 6.2
 

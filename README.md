@@ -24,20 +24,63 @@ A KDE Plasma widget that allows you to connect to an MQTT server, subscribe to t
 
 First, make sure you have the required dependencies:
 
+#### For Debian/Ubuntu-based distributions
+
 ```bash
-# For Debian/Ubuntu
-sudo apt install cmake extra-cmake-modules plasma-framework-dev qt6-base-dev qt6-declarative-dev libkf5notifications-dev qt6-mqtt-dev
+# Install development tools
+sudo apt install cmake extra-cmake-modules
 
-# For Fedora
-sudo dnf install cmake gcc-c++ kf5-extra-cmake-modules kf5-plasma-devel qt6-qtbase-devel qt6-qtdeclarative-devel kf5-knotifications-devel qt6-qtmqtt-devel
+# Install KDE development packages
+sudo apt install plasma-framework-dev libkf5notifications-dev
 
-# For Arch Linux
-sudo pacman -S cmake extra-cmake-modules plasma-framework qt6-base qt6-declarative knotifications qt6-mqtt
+# Install Qt dependencies
+sudo apt install qt6-base-dev qt6-declarative-dev
+
+# Install MQTT dependencies
+sudo apt install qt6-mqtt-dev
+
+# Install Mosquitto for testing (optional)
+sudo apt install mosquitto mosquitto-clients
+```
+
+#### For Fedora-based distributions
+
+```bash
+# Install development tools
+sudo dnf install cmake gcc-c++ extra-cmake-modules
+
+# Install KDE development packages
+sudo dnf install kf5-plasma-devel kf5-knotifications-devel
+
+# Install Qt dependencies
+sudo dnf install qt6-qtbase-devel qt6-qtdeclarative-devel
+
+# Install MQTT dependencies
+sudo dnf install qt6-qtmqtt-devel
+
+# Install Mosquitto for testing (optional)
+sudo dnf install mosquitto mosquitto-clients
+```
+
+#### For Arch Linux
+
+```bash
+sudo pacman -S cmake extra-cmake-modules plasma-framework qt6-base qt6-declarative knotifications qt6-mqtt mosquitto
 ```
 
 ### Install the Plasmoid
 
-Method 1: Using plasmapkg (recommended)
+#### Method 1: Using the installation script
+
+```bash
+# Make the script executable (if not already)
+chmod +x install.sh
+
+# Run the installation script
+./install.sh
+```
+
+#### Method 2: Using plasmapkg
 
 ```bash
 # Navigate to the directory containing the plasmoid
@@ -47,12 +90,14 @@ cd /path/to/MQTT\ Plasmoid/
 plasmapkg6 -i org.kde.plasma.mqttmonitor || plasmapkg2 -i org.kde.plasma.mqttmonitor
 ```
 
-Method 2: Manual installation
+#### Method 3: Manual installation
 
 ```bash
-# Copy the plasmoid to the local plasmoids directory
-mkdir -p ~/.local/share/plasma/plasmoids/
-cp -r org.kde.plasma.mqttmonitor ~/.local/share/plasma/plasmoids/
+# Create the destination directory if it doesn't exist
+mkdir -p ~/.local/share/plasma/plasmoids/org.kde.plasma.mqttmonitor
+
+# Copy the plasmoid files
+cp -r org.kde.plasma.mqttmonitor/* ~/.local/share/plasma/plasmoids/org.kde.plasma.mqttmonitor/
 ```
 
 After installation, you may need to restart Plasma:
@@ -60,6 +105,48 @@ After installation, you may need to restart Plasma:
 ```bash
 kquitapp6 plasmashell || kquitapp5 plasmashell
 kstart6 plasmashell || kstart5 plasmashell
+```
+
+## Setting Up MQTT Broker for Testing
+
+For testing purposes, you can use the built-in Mosquitto MQTT broker:
+
+### 1. Start the Mosquitto service
+
+```bash
+# For systemd-based distributions (Ubuntu, Fedora, etc.)
+sudo systemctl start mosquitto
+sudo systemctl enable mosquitto  # Optional: start on boot
+sudo systemctl status mosquitto  # Check if it's running
+
+# For non-systemd distributions
+sudo service mosquitto start
+```
+
+### 2. Configure Mosquitto (Optional)
+
+By default, Mosquitto allows anonymous connections on localhost. If you want to customize it:
+
+```bash
+# Create a configuration file
+sudo nano /etc/mosquitto/conf.d/local.conf  # Fedora/Ubuntu
+# or
+sudo nano /etc/mosquitto/mosquitto.conf     # Some distributions
+```
+
+Add the following content for a basic configuration:
+
+```
+listener 1883
+allow_anonymous true
+```
+
+Then restart Mosquitto:
+
+```bash
+sudo systemctl restart mosquitto  # For systemd
+# or
+sudo service mosquitto restart    # For non-systemd
 ```
 
 ## Usage
@@ -94,30 +181,92 @@ office/lights|integer|=1|Office lights are on
 
 ## Testing
 
-To test the plasmoid, you can use the mosquitto_pub command-line tool:
+### Method 1: Using the provided test script
 
 ```bash
-# Install mosquitto clients
-sudo apt install mosquitto-clients  # Debian/Ubuntu
-sudo dnf install mosquitto         # Fedora
-sudo pacman -S mosquitto          # Arch Linux
+# Make the script executable (if not already)
+chmod +x test_mqtt.sh
 
-# Publish test messages
-mosquitto_pub -h localhost -t "home/sensors/temperature" -m "32"
-mosquitto_pub -h localhost -t "home/sensors/door" -m "open"
+# Run the test script
+./test_mqtt.sh
+```
+
+### Method 2: Manual testing with mosquitto_pub
+
+```bash
+# Test with a temperature value
+mosquitto_pub -h localhost -t "test/temperature" -m "32"
+
+# Test with a string value
+mosquitto_pub -h localhost -t "test/door" -m "open"
 ```
 
 ## Troubleshooting
 
-If you encounter issues:
+### Common Issues
 
-1. Check if the MQTT broker is running and accessible
-2. Verify your connection settings (address, port, credentials)
-3. Check the Plasma logs for errors:
+1. **Connection Issues**
+   - Check if the MQTT broker is running and accessible
+   - Verify your connection settings (address, port, credentials)
+   - Check the Plasma logs for errors:
+     ```bash
+     journalctl -f -t plasmashell
+     ```
+
+2. **Missing Qt MQTT module**
+   - For Debian/Ubuntu:
+     ```bash
+     sudo apt install qt6-mqtt-dev
+     ```
+   - For Fedora:
+     ```bash
+     sudo dnf install qt6-qtmqtt qt6-qtmqtt-devel
+     ```
+
+3. **SELinux Blocking Connections (Fedora)**
    ```bash
-   journalctl -f -t plasmashell
+   # Check if SELinux is blocking connections
+   sudo ausearch -m avc -ts recent
+   
+   # Temporarily set SELinux to permissive mode for testing
+   sudo setenforce 0
+   
+   # To make a permanent exception for Mosquitto
+   sudo setsebool -P nis_enabled 1
    ```
-4. Make sure the Qt MQTT module is installed correctly
+
+4. **Firewall Issues**
+   - For Ubuntu:
+     ```bash
+     sudo ufw allow 1883/tcp
+     ```
+   - For Fedora:
+     ```bash
+     sudo firewall-cmd --permanent --add-port=1883/tcp
+     sudo firewall-cmd --reload
+     ```
+
+5. **Plasmoid Not Appearing**
+   Clear the KDE cache:
+   ```bash
+   rm -rf ~/.cache/plasma*
+   kquitapp6 plasmashell || kquitapp5 plasmashell
+   kstart6 plasmashell || kstart5 plasmashell
+   ```
+
+## Uninstalling
+
+If you need to remove the plasmoid:
+
+```bash
+plasmapkg6 -r org.kde.plasma.mqttmonitor || plasmapkg2 -r org.kde.plasma.mqttmonitor
+```
+
+## Additional Resources
+
+- [KDE Plasma Development Documentation](https://develop.kde.org/docs/plasma/)
+- [Mosquitto Documentation](https://mosquitto.org/documentation/)
+- [MQTT Protocol Documentation](https://mqtt.org/documentation/)
 
 ## License
 
