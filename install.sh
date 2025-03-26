@@ -74,14 +74,17 @@ check_plasmapkg() {
                 ;;
             fedora)
                 echo "Attempting to install plasma-framework..."
-                sudo dnf install -y plasma-framework
+                sudo dnf install -y kf5-plasma-devel
                 ;;
             arch)
                 echo "Attempting to install plasma-framework..."
                 sudo pacman -S --needed --noconfirm plasma-framework
                 ;;
             *)
-                echo "Please install plasma-framework package for your distribution."
+                echo "Please install the plasma framework package for your distribution:"
+                echo "  - Debian/Ubuntu: sudo apt install plasma-framework"
+                echo "  - Fedora: sudo dnf install kf5-plasma-devel"
+                echo "  - Arch Linux: sudo pacman -S plasma-framework"
                 exit 1
                 ;;
         esac
