@@ -106,24 +106,36 @@ check_plasmapkg() {
 # Check if mosquitto_pub is installed
 check_mosquitto() {
     if ! command -v mosquitto_pub &> /dev/null; then
-        echo "Mosquitto clients not found. Installing..."
+        echo "Mosquitto clients not found."
+        echo "Mosquitto is optional but useful for testing MQTT functionality."
         
-        local distro=$(detect_distro)
-        case $distro in
-            debian)
-                sudo apt update && sudo apt install -y mosquitto-clients
-                ;;
-            fedora)
-                sudo dnf install -y mosquitto
-                ;;
-            arch)
-                sudo pacman -S --needed --noconfirm mosquitto
-                ;;
-            *)
-                echo "Warning: Could not install mosquitto-clients automatically."
-                echo "You may need to install it manually for testing."
-                ;;
-        esac
+        read -p "Do you want to install Mosquitto? (y/n) " -n 1 -r
+        echo ""
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            echo "Installing Mosquitto clients..."
+            
+            local distro=$(detect_distro)
+            case $distro in
+                debian)
+                    sudo apt update && sudo apt install -y mosquitto-clients
+                    ;;
+                fedora)
+                    sudo dnf install -y mosquitto
+                    ;;
+                arch)
+                    sudo pacman -S --needed --noconfirm mosquitto
+                    ;;
+                *)
+                    echo "Warning: Could not install mosquitto-clients automatically."
+                    echo "You may need to install it manually for testing:"
+                    echo "  - Debian/Ubuntu: sudo apt install mosquitto-clients"
+                    echo "  - Fedora: sudo dnf install mosquitto"
+                    echo "  - Arch Linux: sudo pacman -S mosquitto"
+                    ;;
+            esac
+        else
+            echo "Skipping Mosquitto installation."
+        fi
     else
         echo "Mosquitto clients already installed."
     fi
