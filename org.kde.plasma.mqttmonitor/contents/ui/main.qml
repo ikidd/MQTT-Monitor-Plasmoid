@@ -21,7 +21,7 @@ Item {
         
         onConnected: {
             statusText.text = "Connected"
-            statusText.color = "green"
+            statusText.color = PlasmaCore.Theme.positiveTextColor
             
             // Subscribe to configured topics
             var topicsList = plasmoid.configuration.topics.split(',')
@@ -36,7 +36,7 @@ Item {
         
         onErrorChanged: {
             statusText.text = "Error: " + error
-            statusText.color = "red"
+            statusText.color = PlasmaCore.Theme.negativeTextColor
         }
         
         onMessageReceived: {
@@ -108,7 +108,7 @@ Item {
         PlasmaComponents.Label {
             id: statusText
             text: "Disconnected"
-            color: "red"
+            color: PlasmaCore.Theme.negativeTextColor
             Layout.alignment: Qt.AlignHCenter
         }
         
@@ -121,7 +121,7 @@ Item {
                     if (mqttClient.state === MqttClient.Connected) {
                         mqttClient.disconnectFromHost()
                         statusText.text = "Disconnected"
-                        statusText.color = "red"
+                        statusText.color = PlasmaCore.Theme.negativeTextColor
                     } else {
                         mqttClient.connectToHost()
                     }
